@@ -1,6 +1,7 @@
 ﻿using Bikya.Data.Response;
 using Bikya.DTOs.CategoryDTOs;
 using Bikya.Services.Interfaces;
+using Bikya.Services.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,14 +20,18 @@ namespace Bikya.API.Areas.Category
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 10, [FromQuery] string? search = null)
+        public async Task<IActionResult> GetAllWithPages([FromQuery] int page = 1, [FromQuery] int pageSize = 10, [FromQuery] string? search = null)
         {
-            var response = await _service.GetAllAsync(page, pageSize, search);
+            var response = await _service.GetPagedAsync(page, pageSize, search);
             return StatusCode(response.StatusCode, response);
         }
 
-
-
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var response = await _service.GetAllAsync();
+            return StatusCode(response.StatusCode, response);
+        }
 
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById(int id)

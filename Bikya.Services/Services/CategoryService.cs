@@ -21,43 +21,54 @@ namespace Bikya.Services.Services
             _context = context;
         }
 
-        public async Task<ApiResponse<object>> GetAllAsync(int page = 1, int pageSize = 10, string? search = null)
+        public async Task<ApiResponse<List<CategoryDTO>>> GetAllAsync()
         {
-            var query = _context.Categories.AsQueryable();
+            var categories = await _context.Categories
+                .Include(c => c.SubCategories)
+                .Include(c => c.Products)
+                .ToListAsync();
 
-            if (!string.IsNullOrEmpty(search))
+            var result = categories.Select(ToCategoryDTO).ToList();
+            return ApiResponse<List<CategoryDTO>>.SuccessResponse(result, "Categories retrieved successfully");
+        }
+
+        public async Task<ApiResponse<object>> GetPagedAsync(int page = 1, int pageSize = 10, string? search = null)
+        {
+            var query = _context.Categories
+                .Include(c => c.SubCategories)
+                .Include(c => c.Products)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(search))
             {
                 query = query.Where(c => c.Name.Contains(search));
             }
 
-            int totalCount = await query.CountAsync();
-            int totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+            var totalCount = await query.CountAsync();
 
             var categories = await query
-                .OrderByDescending(c => c.CreatedAt)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
 
             var result = categories.Select(ToCategoryDTO).ToList();
 
-            var responseData = new
+            var response = new
             {
-                items = result,
-                totalCount = totalCount,
-                totalPages = totalPages,
-                currentPage = page,
-                pageSize = pageSize
+                CurrentPage = page,
+                PageSize = pageSize,
+                TotalCount = totalCount,
+                TotalPages = (int)Math.Ceiling((double)totalCount / pageSize),
+                Data = result
             };
 
-            return ApiResponse<object>.SuccessResponse(responseData, "Categories retrieved with pagination");
+            return ApiResponse<object>.SuccessResponse(response, "Paged categories retrieved successfully");
         }
-
-
 
         public async Task<ApiResponse<CategoryDTO>> GetByIdAsync(int id)
         {
-            var category = await _context.Categories 
+            var category = await _context.Categories
+                .Include(c => c.SubCategories)
                 .Include(c => c.Products)
                 .FirstOrDefaultAsync(c => c.Id == id);
 
@@ -70,6 +81,7 @@ namespace Bikya.Services.Services
         public async Task<ApiResponse<CategoryDTO>> GetByNameAsync(string name)
         {
             var category = await _context.Categories
+                .Include(c => c.SubCategories)
                 .Include(c => c.Products)
                 .FirstOrDefaultAsync(c => c.Name.ToLower() == name.ToLower());
 
@@ -139,7 +151,7 @@ namespace Bikya.Services.Services
                 Id = category.Id,
                 Name = category.Name,
                 IconUrl = category.IconUrl,
-              
+                ParentCategoryId = category.ParentCategoryId,
                 Description = category.Description,
                 CreatedAt = category.CreatedAt,
 
@@ -152,7 +164,7 @@ namespace Bikya.Services.Services
             {
                 Name = dto.Name,
                 IconUrl = dto.IconUrl,
-               
+                ParentCategoryId = dto.ParentCategoryId,
                 Description = dto.Description,
 
             };

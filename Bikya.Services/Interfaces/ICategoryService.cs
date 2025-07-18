@@ -11,8 +11,8 @@ namespace Bikya.Services.Interfaces
     public interface ICategoryService
     {
 
-        Task<ApiResponse<object>> GetAllAsync(int page = 1, int pageSize = 10, string? search = null);
-
+        Task<ApiResponse<object>> GetPagedAsync(int page = 1, int pageSize = 10, string? search = null);
+        Task<ApiResponse<List<CategoryDTO>>> GetAllAsync();
         Task<ApiResponse<CategoryDTO>> GetByIdAsync(int id);
         Task<ApiResponse<CategoryDTO>> GetByNameAsync(string name);
         Task<ApiResponse<CategoryDTO>> AddAsync(CreateCategoryDTO dto);

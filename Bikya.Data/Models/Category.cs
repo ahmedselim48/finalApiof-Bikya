@@ -17,16 +17,14 @@ namespace Bikya.Data.Models
 
         public string? IconUrl { get; set; }
 
-        // public int? ParentCategoryId { get; set; }
-        // public Category? ParentCategory { get; set; }
+        public int? ParentCategoryId { get; set; }
+        public Category? ParentCategory { get; set; }
 
-      //  public ICollection<Category>? SubCategories { get; set; }
+        public ICollection<Category>? SubCategories { get; set; }
 
         public ICollection<Product> Products { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
-        // علاقة One-to-Many مع Product
     }
 }
 

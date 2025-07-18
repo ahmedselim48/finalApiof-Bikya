@@ -10,7 +10,7 @@ namespace Bikya.DTOs.ReviewDTOs
     public class UpdateReviewDTO
     {
         [Required]
-        public int Id { get; set; }  
+        public int Id { get; set; }
 
         [Range(1, 5)]
         public int Rating { get; set; }
@@ -18,10 +18,13 @@ namespace Bikya.DTOs.ReviewDTOs
         public string? Comment { get; set; }
 
         [Required]
-        public int ReviewerId { get; set; } 
+        public int ReviewerId { get; set; }
 
         [Required]
-        public int OrderId { get; set; }     
+        public int SellerId { get; set; }
+
+        [Required]
+        public int OrderId { get; set; }
     }
 
 }

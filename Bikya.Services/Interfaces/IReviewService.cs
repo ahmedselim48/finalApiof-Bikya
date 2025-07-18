@@ -13,11 +13,13 @@ namespace Bikya.Services.Interfaces
         Task<ApiResponse<List<ReviewDTO>>> GetAllAsync();
         Task<ApiResponse<ReviewDTO>> GetByIdAsync(int id);
         Task<ApiResponse<ReviewDTO>> AddAsync(CreateReviewDTO dto);
-        Task<ApiResponse<ReviewDTO>> UpdateAsync(int id, UpdateReviewDTO dto);
-        Task<ApiResponse<bool>> DeleteAsync(int id);
-        Task<ApiResponse<List<ReviewDTO>>> GetReviewsBySellerIdAsync(int sellerId);
-        Task<ApiResponse<List<ReviewDTO>>> GetReviewsByReviewerIdAsync(int reviewerId);
-        Task<ApiResponse<List<ReviewDTO>>> GetReviewsByOrderIdAsync(int orderId);
+        Task<ApiResponse<ReviewDTO>> UpdateAsync(UpdateReviewDTO dto);
+        Task<ApiResponse<object>> DeleteAsync(int id);
+        Task<ApiResponse<List<ReviewDTO>>> GetReviewsForSellerAsync(int sellerId);
+
+        //Task<ApiResponse<List<ReviewDTO>>> GetReviewsBySellerIdAsync(int sellerId);
+        //Task<ApiResponse<List<ReviewDTO>>> GetReviewsByReviewerIdAsync(int reviewerId);
+        //Task<ApiResponse<List<ReviewDTO>>> GetReviewsByOrderIdAsync(int orderId);
 
 
 

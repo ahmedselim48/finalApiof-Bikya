@@ -174,10 +174,9 @@ namespace Bikya
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
+            app.UseCors("AllowSpecificOrigin");
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseCors("AllowSpecificOrigin");
 
             // Map controllers with areas support
             app.MapControllers();
