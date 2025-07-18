@@ -19,14 +19,15 @@ namespace Bikya.API.Areas.Category
             _service = service;
         }
 
-        [HttpGet]
+        
+        [HttpGet("paged")]
         public async Task<IActionResult> GetAllWithPages([FromQuery] int page = 1, [FromQuery] int pageSize = 10, [FromQuery] string? search = null)
         {
             var response = await _service.GetPagedAsync(page, pageSize, search);
             return StatusCode(response.StatusCode, response);
         }
 
-        [HttpGet]
+        [HttpGet("all")]
         public async Task<IActionResult> GetAll()
         {
             var response = await _service.GetAllAsync();

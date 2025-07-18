@@ -68,7 +68,14 @@ namespace Bikya.API.Areas.Review
             var response = await _service.UpdateAsync(dto);
             return StatusCode(response.StatusCode, response);
         }
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var response = await _service.DeleteAsync(id);
+            return StatusCode(response.StatusCode, response);
+        }
 
+        // هنستخدم دول ليه اصلا؟؟
 
         //public async Task<IActionResult> Update(int id, [FromBody] UpdateReviewDTO dto)
         //{
@@ -88,13 +95,8 @@ namespace Bikya.API.Areas.Review
         //}
 
         // DELETE: api/Reviews/5
-        [HttpDelete("{id:int}")]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var response = await _service.DeleteAsync(id);
-            return StatusCode(response.StatusCode, response);
-        }
-         // هنستخدم دول ليه اصلا؟؟
+
+
         //// GET: api/Reviews/order/5
         //[HttpGet("order/{orderId:int}")]
         //public async Task<IActionResult> GetByOrderId(int orderId)
