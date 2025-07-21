@@ -49,7 +49,7 @@ namespace Bikya.API.Areas.Category
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Add([FromBody] CreateCategoryDTO dto)
         {
             if (!ModelState.IsValid)

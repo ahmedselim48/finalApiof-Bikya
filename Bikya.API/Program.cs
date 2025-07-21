@@ -160,6 +160,8 @@ namespace Bikya
                     }
                 });
             });
+            builder.Services.AddHttpClient<IChatService, ChatService>();
+            builder.Services.AddScoped<IChatService, ChatService>();
 
             var app = builder.Build();
 

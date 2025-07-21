@@ -17,7 +17,7 @@ namespace Bikya.DTOs.CategoryDTOs
         public string? IconUrl { get; set; }
 
         public int? ParentCategoryId { get; set; }
-
+        public string? ParentName { get; set; }
         public DateTime CreatedAt { get; set; }
         public List<Product> Products { get; set; }
 

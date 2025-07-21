@@ -126,6 +126,7 @@ namespace Bikya.Services.Services
             category.Name = dto.Name;
             category.Description = dto.Description;
             category.IconUrl = dto.IconUrl;
+            category.ParentCategoryId = dto.ParentCategoryId;
 
             await _context.SaveChangesAsync();
 
@@ -154,6 +155,7 @@ namespace Bikya.Services.Services
                 ParentCategoryId = category.ParentCategoryId,
                 Description = category.Description,
                 CreatedAt = category.CreatedAt,
+                ParentName=category.ParentCategory != null ? category.ParentCategory.Name : null
 
             };
         }
