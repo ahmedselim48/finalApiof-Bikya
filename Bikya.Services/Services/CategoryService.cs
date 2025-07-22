@@ -32,7 +32,7 @@ namespace Bikya.Services.Services
             return ApiResponse<List<CategoryDTO>>.SuccessResponse(result, "Categories retrieved successfully");
         }
 
-        public async Task<ApiResponse<object>> GetPagedAsync(int page = 1, int pageSize = 10, string? search = null)
+        public async Task<ApiResponse<object>> GetPagedAsync(int page = 1, int pageSize = 9, string? search = null)
         {
             var query = _context.Categories
                 .Include(c => c.SubCategories)
@@ -65,6 +65,40 @@ namespace Bikya.Services.Services
             return ApiResponse<object>.SuccessResponse(response, "Paged categories retrieved successfully");
         }
 
+        public async Task<ApiResponse<object>> GetCategoryWithProductsAsync(int id)
+        {
+            var category = await _context.Categories
+                .Include(c => c.Products)
+                .FirstOrDefaultAsync(c => c.Id == id);
+
+            if (category == null)
+                return ApiResponse<object>.ErrorResponse("❌ Category not found", 404);
+
+            var categoryDto = new
+            {
+                category.Id,
+                category.Name,
+                category.Description,
+                category.IconUrl
+            };
+
+            var productDtos = category.Products.Select(p => new
+            {
+                p.Id,
+                p.Title,
+                p.Description,
+                p.Price,
+                p.Images
+            }).ToList();
+
+            var result = new
+            {
+                category = categoryDto,
+                products = productDtos
+            };
+
+            return ApiResponse<object>.SuccessResponse(result, "✅ Category with products retrieved");
+        }
         public async Task<ApiResponse<CategoryDTO>> GetByIdAsync(int id)
         {
             var category = await _context.Categories
@@ -109,7 +143,27 @@ namespace Bikya.Services.Services
             return ApiResponse<CategoryDTO>.SuccessResponse(ToCategoryDTO(category), "Category created successfully", 201);
         }
 
+        public async Task<ApiResponse<int>> CreateBulkAsync(List<CreateCategoryDTO> dtos)
+        {
+            if (dtos == null || !dtos.Any())
+            {
+                return ApiResponse<int>.ErrorResponse("No categories provided.",404);
+            }
 
+            var categories = dtos.Select(dto => new Category
+            {
+                Name = dto.Name,
+                Description = dto.Description,
+                IconUrl = dto.IconUrl,
+                ParentCategoryId = dto.ParentCategoryId,
+                CreatedAt = DateTime.UtcNow
+            }).ToList();
+
+            await _context.Categories.AddRangeAsync(categories);
+            var result = await _context.SaveChangesAsync();
+
+            return ApiResponse<int>.SuccessResponse(result, "Categories created successfully.");
+        }
         public async Task<ApiResponse<CategoryDTO>> UpdateAsync(int id, UpdateCategoryDTO dto)
         {
             var category = await _context.Categories.FindAsync(id);
@@ -168,6 +222,7 @@ namespace Bikya.Services.Services
                 IconUrl = dto.IconUrl,
                 ParentCategoryId = dto.ParentCategoryId,
                 Description = dto.Description,
+                
 
             };
         }

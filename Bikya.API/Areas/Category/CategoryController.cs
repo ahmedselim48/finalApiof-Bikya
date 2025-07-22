@@ -21,7 +21,7 @@ namespace Bikya.API.Areas.Category
 
         
         [HttpGet("paged")]
-        public async Task<IActionResult> GetAllWithPages([FromQuery] int page = 1, [FromQuery] int pageSize = 10, [FromQuery] string? search = null)
+        public async Task<IActionResult> GetAllWithPages([FromQuery] int page = 1, [FromQuery] int pageSize = 9, [FromQuery] string? search = null)
         {
             var response = await _service.GetPagedAsync(page, pageSize, search);
             return StatusCode(response.StatusCode, response);
@@ -31,6 +31,14 @@ namespace Bikya.API.Areas.Category
         public async Task<IActionResult> GetAll()
         {
             var response = await _service.GetAllAsync();
+            return StatusCode(response.StatusCode, response);
+        }
+
+
+        [HttpGet("{id}/with-products")]
+        public async Task<IActionResult> GetCategoryWithProducts(int id)
+        {
+            var response = await _service.GetCategoryWithProductsAsync(id);
             return StatusCode(response.StatusCode, response);
         }
 
@@ -59,8 +67,16 @@ namespace Bikya.API.Areas.Category
             return StatusCode(response.StatusCode, response);
         }
 
+        [HttpPost("bulk")]
+        //[Authorize(Roles = "Admin")]
+        public async Task<IActionResult> CreateBulk([FromBody] BulkCreateCategoryDTO request)
+        {
+            var response = await _service.CreateBulkAsync(request.Categories);
+            return StatusCode(response.StatusCode, response);
+        }
+
         [HttpPut("{id}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(int id, [FromBody] UpdateCategoryDTO dto)
         {
             if (id != dto.Id)
@@ -71,7 +87,7 @@ namespace Bikya.API.Areas.Category
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var response = await _service.DeleteAsync(id);

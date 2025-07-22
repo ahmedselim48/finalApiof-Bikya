@@ -18,5 +18,7 @@ namespace Bikya.Services.Interfaces
         Task<ApiResponse<CategoryDTO>> AddAsync(CreateCategoryDTO dto);
         Task<ApiResponse<CategoryDTO>> UpdateAsync(int id, UpdateCategoryDTO dto);
         Task<ApiResponse<bool>> DeleteAsync(int id);
+        Task<ApiResponse<int>> CreateBulkAsync(List<CreateCategoryDTO> categories);
+        Task<ApiResponse<object>> GetCategoryWithProductsAsync(int id);
     }
 }
