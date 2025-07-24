@@ -25,6 +25,8 @@ namespace Bikya.Data.Repositories.Interfaces
         Task RejectProductAsync(int id);
 
         Task<IEnumerable<Product>> GetNotApprovedProductByUserAsync(int userId);
+        Task<int> CountUserProductsAsync(int userId);
+
 
 
     }

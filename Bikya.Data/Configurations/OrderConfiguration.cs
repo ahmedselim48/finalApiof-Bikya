@@ -29,7 +29,7 @@ namespace Bikya.Data.Configurations
                    .IsRequired();
 
           
-            builder.Property(o => o.Status)
+            builder.Property(o => o.OrderStatus)
                    .IsRequired();
 
             builder.Property(o => o.CreatedAt)

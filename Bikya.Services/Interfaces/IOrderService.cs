@@ -32,11 +32,14 @@ namespace Bikya.Services.Interfaces
       
         Task<ApiResponse<bool>> UpdateShippingInfoAsync(int orderId, ShippingInfoDTO dto);
 
-       
+        Task<int> CountUserSalesAsync(int userId);
+
+        Task<int> CountUserOrdersAsync(int userId);
+
     //    Task<ApiResponse<bool>> AddReviewToOrderAsync(int orderId, CreateReviewDTO dto, int reviewerId);
 
-       
-    //    Task<ApiResponse<List<ReviewDTO>>> GetReviewsByOrderIdAsync(int orderId);
-    //
+
+        //    Task<ApiResponse<List<ReviewDTO>>> GetReviewsByOrderIdAsync(int orderId);
+        //
     }
 }

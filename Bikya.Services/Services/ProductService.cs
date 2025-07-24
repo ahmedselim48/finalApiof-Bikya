@@ -66,11 +66,11 @@ namespace Bikya.Services.Services
         }
 
 
-        
+
         public async Task<IEnumerable<Product>> GetProductsByUserAsync(int userId)
         {
-            var iseExits =await  UserExistsAsync(userId);
-            if (!iseExits)  throw new ArgumentException("User does not exist");
+            var iseExits = await UserExistsAsync(userId);
+            if (!iseExits) throw new ArgumentException("User does not exist");
 
             return await _productRepository.GetProductsByUserAsync(userId);
         }
@@ -111,7 +111,7 @@ namespace Bikya.Services.Services
             await _productRepository.CreateAsync(product);
             return product;
         }
-        public async Task UpdateProductAsync(int id,ProductDTO productDTO,int userId)
+        public async Task UpdateProductAsync(int id, ProductDTO productDTO, int userId)
         {
             //automaper here
             var existing = await _productRepository.GetByIdAsync(id);
@@ -121,7 +121,7 @@ namespace Bikya.Services.Services
 
             if (existing.UserId != userId && !isAdmin) throw new UnauthorizedAccessException("You do not have permission to update this product");
 
-            if(existing.Status != Data.Enums.ProductStatus.Available)
+            if (existing.Status != Data.Enums.ProductStatus.Available)
                 throw new InvalidOperationException("You can not update a product that is in Process");
 
             existing.Title = productDTO.Title;
@@ -135,32 +135,32 @@ namespace Bikya.Services.Services
 
             await _productRepository.UpdateAsync(existing);
 
-            return ;
+            return;
         }
-  
-
-        
 
 
 
-        public async Task DeleteProductAsync(int id,int userId,string rootPath)
+
+
+
+        public async Task DeleteProductAsync(int id, int userId, string rootPath)
         {
             var existing = await _productRepository.GetProductWithImagesByIdAsync(id);
             if (existing == null) throw new ArgumentException("Product not found");
             var isAdmin = await ISAdmin(userId);
 
-            if (existing.UserId != userId&&!isAdmin) throw new UnauthorizedAccessException("You do not have permission to delete this product");
+            if (existing.UserId != userId && !isAdmin) throw new UnauthorizedAccessException("You do not have permission to delete this product");
 
             if (existing.Status != Data.Enums.ProductStatus.Available)
                 throw new InvalidOperationException("You can not update a product that is in Process");
 
             //foreach (var image in existing.Images)
             //{
-                
+
             //    await productImageService.DeleteProductImageAsync(image.Id,userId,rootPath);
             //}
             await _productRepository.DeleteAsync(existing);
-            return ;
+            return;
         }
 
 
@@ -171,7 +171,7 @@ namespace Bikya.Services.Services
 
             if (product.IsApproved) throw new InvalidOperationException("Product is already approved");
             await _productRepository.ApproveProductAsync(productId);
-            return ;
+            return;
         }
         public async Task RejectProductAsync(int productId)
         {
@@ -189,6 +189,11 @@ namespace Bikya.Services.Services
             return _productRepository.GetProductsByCategoryAsync(categoryId);
         }
 
+
+        public async Task<int> CountUserProductsAsync(int userId)
+        {
+            return await _productRepository.CountUserProductsAsync(userId);
+        }
 
 
 

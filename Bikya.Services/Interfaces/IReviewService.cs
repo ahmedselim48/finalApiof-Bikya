@@ -16,6 +16,7 @@ namespace Bikya.Services.Interfaces
         Task<ApiResponse<ReviewDTO>> UpdateAsync(UpdateReviewDTO dto);
         Task<ApiResponse<object>> DeleteAsync(int id);
         Task<ApiResponse<List<ReviewDTO>>> GetReviewsForSellerAsync(int sellerId);
+        Task<double> GetAverageRatingBySellerIdAsync(int sellerId);
 
         //Task<ApiResponse<List<ReviewDTO>>> GetReviewsBySellerIdAsync(int sellerId);
         //Task<ApiResponse<List<ReviewDTO>>> GetReviewsByReviewerIdAsync(int reviewerId);

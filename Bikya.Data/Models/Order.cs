@@ -25,7 +25,7 @@ namespace Bikya.Data.Models
         public decimal SellerAmount { get; set; }
 
         // Status Info
-        public OrderStatus Status { get; set; } = OrderStatus.Pending;
+        public OrderStatus OrderStatus { get; set; } = OrderStatus.Pending;
 
         public DateTime CreatedAt { get; set; }
         public DateTime? PaidAt { get; set; }

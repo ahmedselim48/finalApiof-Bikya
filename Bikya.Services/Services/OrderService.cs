@@ -69,7 +69,7 @@ namespace Bikya.Services.Services
                 TotalAmount = order.TotalAmount,
                 PlatformFee = order.PlatformFee,
                 SellerAmount = order.SellerAmount,
-                Status = order.Status.ToString(),
+                Status = order.OrderStatus.ToString(),
                 CreatedAt = order.CreatedAt,
                 ShippingInfo = dto.ShippingInfo
             });
@@ -83,7 +83,7 @@ namespace Bikya.Services.Services
 
             if (Enum.TryParse<OrderStatus>(dto.NewStatus, true, out var newStatus))
             {
-                order.Status = newStatus;
+                order.OrderStatus = newStatus;
                 if (newStatus == OrderStatus.Paid)
                     order.PaidAt = DateTime.UtcNow;
                 else if (newStatus == OrderStatus.Completed)
@@ -110,7 +110,7 @@ namespace Bikya.Services.Services
                     BuyerName = o.Buyer.UserName,
                     SellerName = o.Seller.UserName,
                     TotalAmount = o.TotalAmount,
-                    Status = o.Status,
+                    Status = o.OrderStatus,
                     CreatedAt = o.CreatedAt
                 }).ToListAsync();
 
@@ -131,7 +131,7 @@ namespace Bikya.Services.Services
                     BuyerName = o.Buyer.UserName,
                     SellerName = o.Seller.UserName,
                     TotalAmount = o.TotalAmount,
-                    Status = o.Status,
+                    Status = o.OrderStatus,
                     CreatedAt = o.CreatedAt
                 }).ToListAsync();
 
@@ -152,7 +152,7 @@ namespace Bikya.Services.Services
                     BuyerName = o.Buyer.UserName,
                     SellerName = o.Seller.UserName,
                     TotalAmount = o.TotalAmount,
-                    Status = o.Status,
+                    Status = o.OrderStatus,
                     CreatedAt = o.CreatedAt
                 }).ToListAsync();
 
@@ -172,7 +172,7 @@ namespace Bikya.Services.Services
                     BuyerName = o.Buyer.UserName,
                     SellerName = o.Seller.UserName,
                     TotalAmount = o.TotalAmount,
-                    Status = o.Status,
+                    Status = o.OrderStatus,
                     CreatedAt = o.CreatedAt
                 }).ToListAsync();
 
@@ -198,7 +198,7 @@ namespace Bikya.Services.Services
                 BuyerName = order.Buyer.UserName,
                 SellerName = order.Seller.UserName,
                 TotalAmount = order.TotalAmount,
-                Status = order.Status,
+                Status = order.OrderStatus,
                 CreatedAt = order.CreatedAt,
                 ShippingInfo = new ShippingDetailsDto
                 {
@@ -222,10 +222,10 @@ namespace Bikya.Services.Services
             if (order == null || order.BuyerId != buyerId)
                 return ApiResponse<bool>.ErrorResponse("Not authorized or order not found", 403);
 
-            if (order.Status != OrderStatus.Pending)
+            if (order.OrderStatus != OrderStatus.Pending)
                 return ApiResponse<bool>.ErrorResponse("Only pending orders can be canceled", 400);
 
-            order.Status = OrderStatus.Cancelled;
+            order.OrderStatus = OrderStatus.Cancelled;
             _context.Orders.Update(order);
             await _context.SaveChangesAsync();
 
@@ -251,6 +251,16 @@ namespace Bikya.Services.Services
             await _context.SaveChangesAsync();
 
             return ApiResponse<bool>.SuccessResponse(true);
+        }
+        public async Task<int> CountUserOrdersAsync(int userId)
+        {
+            return await _context.Orders.CountAsync(o => o.BuyerId == userId);
+        }
+
+        public async Task<int> CountUserSalesAsync(int userId)
+        {
+            var completedOrders = await _context.Orders.CountAsync(o => o.SellerId == userId && o.OrderStatus == OrderStatus.Completed);
+            return completedOrders;
         }
 
 
@@ -287,14 +297,14 @@ namespace Bikya.Services.Services
         //        Product = order.Product,
         //        Order = order
         //    };
-           
+
 
         //    order.Reviews ??= new List<Review>();
         //    order.Reviews.Add(review);
 
         //    await _context.SaveChangesAsync();
 
-          
+
         //    await UpdateSellerRatingAsync(dto.SellerId);
 
         //    return ApiResponse<bool>.SuccessResponse(true, "Review added successfully");

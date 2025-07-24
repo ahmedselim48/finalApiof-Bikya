@@ -75,6 +75,21 @@ namespace Bikya.API.Areas.Review
             return StatusCode(response.StatusCode, response);
         }
 
+
+        [HttpGet("AverageRating/{sellerId}")]
+        public async Task<ActionResult<ApiResponse<double>>> GetAverageRating(int sellerId)
+        {
+            var average = await _service.GetAverageRatingBySellerIdAsync(sellerId);
+
+            return Ok(new ApiResponse<double>
+            {
+                Success = true,
+                Message = "Average rating loaded successfully",
+                Data = average
+            });
+        }
+
+
         // هنستخدم دول ليه اصلا؟؟
 
         //public async Task<IActionResult> Update(int id, [FromBody] UpdateReviewDTO dto)

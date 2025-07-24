@@ -77,7 +77,7 @@ public class ReviewService : IReviewService
              o.Id == dto.OrderId &&
              o.BuyerId == dto.ReviewerId &&
              o.SellerId == dto.SellerId &&
-             o.Status == OrderStatus.Completed
+             o.OrderStatus == OrderStatus.Completed
          );
 
         if (order == null)
@@ -150,6 +150,17 @@ public class ReviewService : IReviewService
 
     return ApiResponse<object>.SuccessResponse(null, "Review deleted successfully");
 }
+    public async Task<double> GetAverageRatingBySellerIdAsync(int sellerId)
+    {
+        var reviews = await _context.Reviews
+            .Where(r => r.SellerId == sellerId)
+            .ToListAsync();
+
+        if (reviews.Count == 0)
+            return 0;
+
+        return reviews.Average(r => r.Rating);
+    }
 
 
     public ReviewDTO ToReviewDTO(Review review)

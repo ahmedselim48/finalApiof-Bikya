@@ -145,6 +145,11 @@ namespace Bikya.Data.Repositories
             return;
         }
 
+        public async Task<int> CountUserProductsAsync(int userId)
+        {
+            return await context.Products.CountAsync(p => p.SellerId == userId);
+        }
+
 
         //public Task<IEnumerable<Product>> GetProductsByConditionAsync(string condition)
         //{
